@@ -1,0 +1,46 @@
+/* styles/ViewTemplate.module.css */
+
+.container {
+    padding: 20px;
+    background-color: white;
+  }
+  
+  .heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: black;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    width: 400px;
+  }
+  
+  .searchInput {
+    display: flex;
+    padding: 8px 8px 8px 32px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: white;
+  }
+  
+  .searchIcon {
+    margin-left: 10px;
+    color:black;
+    position: absolute;
+    
+  }
+  
+  .question {
+    margin-bottom: 20px;
+    color: black;
+  }
+  
+  .subheading {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  

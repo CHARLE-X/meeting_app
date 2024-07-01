@@ -1,0 +1,28 @@
+/* Answers.module.css */
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .heading {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: black;
+  }
+  
+  .qaSection {
+    margin-bottom: 20px;
+  }
+  
+  .question {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: black;
+  }
+  
+  .answer {
+    font-size: 1em;
+    color: black;
+
+  }
+  

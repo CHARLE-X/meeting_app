@@ -1,0 +1,72 @@
+/* styles/CreateTemplate.module.css */
+
+.container {
+    padding: 20px;
+  }
+  
+  .heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: black;
+  }
+  
+  .subheading {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    color: black;
+  }
+  
+  .addIcon {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #F3A746;
+  }
+  
+  .addIcon:hover {
+    color: #F3A746;
+  }
+  
+  .input {
+    display: block;
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+  }
+  
+  .questionRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .deleteIcon {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #ff4d4d;
+  }
+  
+  .deleteIcon:hover {
+    color: #cc0000;
+  }
+  
+  .saveButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #F3A746;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .saveButton:hover {
+    background-color: #F3A746;
+  }
+  

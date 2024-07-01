@@ -1,0 +1,107 @@
+/* styles/MeetingDetails.module.css */
+
+.container {
+  padding: 20px;
+}
+
+.meetingDetails {
+  margin-top: 20px;
+}
+
+.detailSection {
+  margin-bottom: 20px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+}
+
+.icon, .editIcon, .downloadIcon {
+  margin-right: 10px;
+  color: black;
+  display: inline-block;
+}
+
+.transcribeButton, .generateAnswersButton {
+  display: block;
+  width: 20%;
+  padding: 10px;
+  background: #F3A746;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.progressBar {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 10px;
+  background-color: #F3A746;
+  transition: width 0.2s;
+}
+.progressBar span {
+  position: absolute;
+  top: -20px;
+  right: 0;
+}
+
+.downloadSection {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.heading{
+  font-size:2em;
+    margin-bottom: 20px;
+    color: black;
+}
+.subheading{
+  font-size: large;
+  color: black;
+  display: flex;
+  padding-right: 380px;
+}
+.detail{
+  color: black;
+}
+.section{
+  display: inline-block;
+}
+.editIcon{
+  margin-left: 120px;
+}
+.trans{
+  color: black;
+}
+.transcribeButton{
+  margin-top: 120px;
+  margin-bottom: 50px;
+}
+.download{
+  color:black
+}
+.generateButton{
+  display:inline-flex;
+  color: black;
+  margin-left: 300px;
+  position: absolute;
+  bottom: 425px;
+}
+

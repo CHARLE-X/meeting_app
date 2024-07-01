@@ -1,0 +1,178 @@
+/* Dashboard.module.css */
+.menuBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 20px;
+    width: 300px;
+  }
+  
+  .searchIcon {
+    color: black;
+    margin-right: 10px;
+  }
+  
+  .searchBar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    background-color: #ffffff;
+    color: black;
+
+  }
+  
+  .dateFilter {
+    display: flex;
+    align-items: center;
+  }
+  
+  .calendar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-right: 10px;
+    
+  }
+  
+  .calendarIcon {
+    color: black;
+    margin-right: 10px;
+
+  }
+  
+  .calendar input {
+    border: none;
+    outline: none;
+    background-color: white;
+  }
+  
+  .filterButton {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 20px;
+    border: 2px solid black;
+  }
+  
+  .newMeetingButton {
+    background-color: #F3A746;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    text-decoration: none;
+    text-align: center;
+  }
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .spinner {
+    font-size: 24px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .noData {
+    text-align: center;
+    margin-top: 20px;
+    color: black;
+  }
+  
+  .meetingsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .meetingsTable th,
+  .meetingsTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+  }
+  
+  .meetingsTable th {
+    background-color: #f4f4f4;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+  }
+  
+  .viewButton {
+    background: none;
+    border: none;
+    color: #f2994a;
+    cursor: pointer;
+  }
+  .meetingsTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .meetingsTable th, .meetingsTable td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+  }
+  
+  .viewButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    
+  }
+  
+  .pageButton {
+    background: none;
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #F3A746;
+  }
+  
+  .pageButton:disabled {
+    background-color: #f2994a;
+    cursor: default;
+  }
+  
