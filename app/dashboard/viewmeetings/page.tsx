@@ -1,6 +1,6 @@
 // pages/dashboard/meetingdetails.tsx
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FaMicrophone, FaEdit } from 'react-icons/fa';
 import { MdDescription } from 'react-icons/md';
@@ -14,16 +14,44 @@ const MeetingDetails: React.FC = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const meetingId = searchParams.get('meeting_id');
+  const meetingId = parseInt(searchParams.get('meeting_id') || '', 10);
   const meetingTitle = searchParams.get('title') || 'Unknown Meeting';
   const template = searchParams.get('template') || 'No Template';
   const fileName = searchParams.get('fileName') || 'No File Uploaded';
-  const templateID = searchParams.get('templateID') || null;
+  const userId = parseInt(searchParams.get('user_id') || '', 10);
 
   const [transcribing, setTranscribing] = useState(false);
   const [transcriptionProgress, setTranscriptionProgress] = useState(0);
   const [transcriptionDone, setTranscriptionDone] = useState(false);
   const [transcriptionText, setTranscriptionText] = useState<string>('');
+
+  useEffect(() => {
+    if (userId && meetingId) {
+      const fetchMeetingDetails = async () => {
+        try {
+          const response = await fetch(API_ENDPOINTS.MEETING_DETAILS(userId, meetingId), {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'ngrok-skip-browser-warning': '69420',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch meeting details');
+          }
+
+          const data = await response.json();
+          console.log('Meeting Details:', data);
+          // Use the data as needed
+        } catch (error) {
+          console.error('Error fetching meeting details:', error);
+        }
+      };
+
+      fetchMeetingDetails();
+    }
+  }, [userId, meetingId]);
 
   const handleEdit = () => {
     router.push('/dashboard/newmeeting');
@@ -39,7 +67,7 @@ const MeetingDetails: React.FC = () => {
     setTranscriptionProgress(0);
 
     try {
-      const response = await fetch('https://1b35-2c0f-2a80-48-710-bc55-8729-920d-946c.ngrok-free.app/meeting/transcribe-audio' , {
+      const response = await fetch(API_ENDPOINTS.TRANSCRIBE_AUDIO, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +150,7 @@ const MeetingDetails: React.FC = () => {
         <div className={styles.detail}>
           <MdDescription className={styles.icon} />
           <span>{template}</span>
-          <FaEdit className={styles.editIcon} onClick={handleEdit} />
+          {/* <FaEdit className={styles.editIcon} onClick={handleEdit} /> */}
         </div>
       </div>
       <button onClick={handleTranscribe} className={styles.transcribeButton} disabled={transcribing}>

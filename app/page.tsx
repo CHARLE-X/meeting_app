@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'; // Import useRouter from next/route
 import { useUser } from '@/app/context/UserContext'; // Assuming this is correctly imported
 import styles from '@/app/styles/Login.module.css';
 import Link from 'next/link';
+import { API_ENDPOINTS } from '@/constant/static';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -16,9 +17,7 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        'https://d35d-197-211-53-14.ngrok-free.app/user/login',
-        {
+      const response = await fetch(API_ENDPOINTS.LOGIN ,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

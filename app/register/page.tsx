@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '@/app/styles/Login.module.css';
+import { API_ENDPOINTS } from '@/constant/static';
 
 const Register = () => {
   const router = useRouter();
@@ -17,10 +18,11 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://d35d-197-211-53-14.ngrok-free.app/user/signup', {
+      const response = await fetch(API_ENDPOINTS.SIGNUP, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420', // Bypass ngrok warning
         },
         body: JSON.stringify({ name, email, password }),
       });

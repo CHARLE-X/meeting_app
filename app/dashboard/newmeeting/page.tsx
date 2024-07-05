@@ -5,6 +5,7 @@ import { FiUploadCloud } from 'react-icons/fi';
 import styles from '@/app/styles/Newmeeting.module.css';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/app/context/UserContext';
+import { API_ENDPOINTS } from '@/constant/static';
 
 interface Template {
   template_id: number;
@@ -17,15 +18,22 @@ const NewMeeting: React.FC = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [meetingTitle, setMeetingTitle] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+  const [selectedTemplateID, setSelectedTemplateID] = useState<number | null>(null);
   const [showReminder, setShowReminder] = useState(false);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [recordingFilePath, setRecordingFilePath] = useState<string | null>(null);
+  const [meetingID, setMeetingID] = useState<number | null>(null);
   const router = useRouter();
   const { user } = useUser();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!meetingTitle) {
       alert('Please enter the meeting title first.');
+      return;
+    }
+
+    if (!user) {
+      alert('User not found. Please log in.');
       return;
     }
 
@@ -37,106 +45,157 @@ const NewMeeting: React.FC = () => {
         setUploading(true);
         setShowReminder(false);
 
-        // Upload the audio file
-        try {
-          const formData = new FormData();
-          formData.append('file', file);
+        // Upload the file to the temporary endpoint
+        const formData = new FormData();
+        formData.append('file', file);
 
-          const response = await fetch(`https://d35d-197-211-53-14.ngrok-free.app/meeting/upload-audio/${encodeURIComponent(meetingTitle)}`, {
-            method: 'POST',
-            body: formData,
-          });
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', API_ENDPOINTS.TEMP_UPLOAD_AUDIO, true);
+        
 
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Failed to upload file:', errorText);
-            throw new Error('Failed to upload file');
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const percentComplete = (e.loaded / e.total) * 100;
+            setUploadProgress(percentComplete);
           }
+        };
 
-          const data = await response.json();
-          setRecordingFilePath(data.recording_file_path);
-          console.log('File uploaded successfully:', data);
+        xhr.onload = () => {
+          if (xhr.status === 201 || xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            setRecordingFilePath(response.temp_audio_path);
+            console.log('Temporary audio file path:', response.temp_audio_path);
+            setUploading(false);
+            alert('File uploaded successfully!');
+          } else {
+            console.error('Failed to upload file:', xhr.responseText);
+            alert('Error uploading file');
+            setUploading(false);
+          }
+        };
 
+        xhr.onerror = () => {
+          console.error('Error uploading file:', xhr.responseText);
+          alert('Error uploading file');
           setUploading(false);
-        } catch (error) {
-          console.error('Error uploading file:', error);
-          setUploading(false);
-        }
+        };
+
+        xhr.send(formData);
       } else {
         alert('Please upload an audio file.');
       }
     }
   };
 
-  const handleFileDelete = () => {
-    setSelectedFile(null);
-    setRecordingFilePath(null);
-    setUploadProgress(0);
-    setUploading(false);
-    setShowReminder(true);
-  };
-
-  const handleSave = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleFileDelete = async () => {
     if (!recordingFilePath) {
-      setShowReminder(true);
       return;
     }
-    if (!user || !user.id) {
-      alert('User is not authenticated.');
-      return;
-    }
-
-    // Prepare meeting data
-    const meetingData = {
-      name: meetingTitle,
-      template_name: selectedTemplate,
-      user_id: user.id,
-      recording_file_path: recordingFilePath,
-    };
 
     try {
-      const response = await fetch('https://d35d-197-211-53-14.ngrok-free.app/meeting/create-meeting', {
-        method: 'POST',
+      const response = await fetch(`${API_ENDPOINTS.DELETE_TEMP_AUDIO}?temp_audio_path=${encodeURIComponent(recordingFilePath)}`, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "69420",
         },
-        body: JSON.stringify(meetingData),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Failed to save meeting:', errorText);
-        throw new Error('Failed to save meeting');
+        console.error('Failed to delete audio:', errorText);
+        throw new Error('Failed to delete audio');
       }
 
-      alert('Meeting saved successfully!');
-      router.push(`/dashboard/meetingdetails?title=${encodeURIComponent(meetingTitle)}&template=${encodeURIComponent(selectedTemplate)}&fileName=${encodeURIComponent(selectedFile!.name)}`);
+      setSelectedFile(null);
+      setRecordingFilePath(null);
+      setUploadProgress(0);
+      setUploading(false);
+      setShowReminder(true);
+      alert('Audio deleted successfully!');
     } catch (error) {
-      console.error('Error saving meeting:', error);
-      alert('Error saving meeting');
+      console.error('Error deleting audio:', error);
+      alert('Error deleting audio');
     }
   };
 
+  const handleSave = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!recordingFilePath || !meetingTitle || !selectedTemplateID || !user) {
+      alert('Please fill in all fields and upload a file.');
+      setShowReminder(true);
+      return;
+    }
+
+    const requestBody = {
+      user_id: user.id,
+      name: meetingTitle,
+      template_name: selectedTemplate,
+      temp_audio_path: recordingFilePath,
+    };
+
+    console.log('Request Body:', JSON.stringify(requestBody));
+
+    try {
+      const response = await fetch(API_ENDPOINTS.FINAL_UPLOAD_AUDIO, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "69420",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to create meeting:', errorText);
+        throw new Error('Failed to create meeting');
+      }
+
+      const data = await response.json();
+      setMeetingID(data.meeting.meeting_id);
+      alert('Meeting created successfully!');
+      router.push(`/dashboard/meetingdetails?meeting_id=${data.meeting.meeting_id}`);
+    } catch (error) {
+      console.error('Error creating meeting:', error);
+      alert('Error creating meeting');
+    }
+};
+
+
+
   useEffect(() => {
     const fetchTemplates = async () => {
+      if (!user || typeof user.id !== 'number' || isNaN(user.id)) {
+        console.error('User ID is not a valid integer:', user);
+        return;
+      }
+
       try {
-        const response = await fetch('https://d35d-197-211-53-14.ngrok-free.app/template/user');
+        const response = await fetch(`${API_ENDPOINTS.GET_TEMPLATES}?user_id=${user.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            "ngrok-skip-browser-warning": "69420",
+          },
+        });
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error('Failed to fetch templates:', errorText);
           throw new Error('Failed to fetch templates');
         }
+
         const data = await response.json();
         console.log('Fetched templates:', data);
-        setTemplates(data.templates);
+        setTemplates(data);
       } catch (error) {
         console.error('Error fetching templates:', error);
       }
     };
 
     fetchTemplates();
-  }, []);
+  }, [user]);
 
   return (
     <form onSubmit={handleSave} className={styles.container}>
@@ -152,7 +211,11 @@ const NewMeeting: React.FC = () => {
         />
         <select
           value={selectedTemplate}
-          onChange={(e) => setSelectedTemplate(e.target.value)}
+          onChange={(e) => {
+            setSelectedTemplate(e.target.value);
+            const selected = templates.find(t => t.template_name === e.target.value);
+            setSelectedTemplateID(selected ? selected.template_id : null);
+          }}
           className={styles.select}
           required
         >
@@ -162,7 +225,6 @@ const NewMeeting: React.FC = () => {
               {template.template_name}
             </option>
           ))}
-           {/* <option value="1">Product</option>  */}
         </select>
       </div>
       <div className={styles.uploadSection}>
@@ -193,7 +255,7 @@ const NewMeeting: React.FC = () => {
           <div className={styles.progressBar}>
             <div className={styles.progress} style={{ width: `${uploadProgress}%` }}></div>
           </div>
-          <p>{uploadProgress}%</p>
+          <p>{uploadProgress.toFixed(2)}%</p>
         </div>
       )}
       <button type="submit" className={styles.saveButton}>

@@ -1,9 +1,10 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaEdit, FaEye } from "react-icons/fa";
 import styles from "@/app/styles/TemplateDashboard.module.css";
 import Link from "next/link";
 import { useUser } from "@/app/context/UserContext";
+import { API_ENDPOINTS } from '@/constant/static';
 
 interface Template {
   template_id: number;
@@ -21,34 +22,41 @@ const TemplateDashboard: React.FC = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
   const fetchTemplates = async () => {
     if (!user || typeof user.id !== "number" || isNaN(user.id)) {
       console.error("User ID is not a valid integer:", user);
       return;
     }
 
-     try {
-    console.log("Fetching templates for user ID:", user.id);
-    const response = await fetch(
-      `https://d35d-197-211-53-14.ngrok-free.app/template/%7Btemplate_name%7D?user_id=${user.id}`
-    );
-    console.log({template_response: response});
-    // if (!response.ok) {
-    //   const errorText = await response.text();
-    //   // console.error('Failed to fetch templates:', errorText);
-    //   // throw new Error(`Failed to fetch templates: ${response.status} ${response.statusText}`);
-    // }
+    try {
+      console.log("Fetching templates for user ID:", user.id);
+      const response = await fetch(`${API_ENDPOINTS.GET_TEMPLATES}?user_id=${user.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': '69420',
+        },
+      });
 
-    const data = await response.json();
-    console.log("Fetched templates:", data);
-    // setTemplates(Array.isArray(data) ? data : [data]);
-      } catch (error) {
+      console.log({ template_response: response });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to fetch templates:', errorText);
+        throw new Error(`Failed to fetch templates: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Fetched templates:", data);
+      setTemplates(Array.isArray(data) ? data : [data]);
+    } catch (error) {
       console.error("Error fetching templates:", error);
     }
   };
+
   useEffect(() => {
     console.log("User object:", user);
-
     fetchTemplates();
   }, [user]);
 
@@ -58,10 +66,7 @@ const TemplateDashboard: React.FC = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredTemplates.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  const currentItems = filteredTemplates.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -98,16 +103,12 @@ const TemplateDashboard: React.FC = () => {
               <td>{template.template_name}</td>
               <td>{template.question_count}</td>
               <td>
-                <Link
-                  href={`/dashboard/questiontemplate/edittemplate/${template.template_id}`}
-                >
+                <Link href={`/dashboard/questiontemplate/edittemplate?template_id=${template.template_id}`}>
                   <FaEdit className={styles.icon} />
                 </Link>
               </td>
               <td>
-                <Link
-                  href={`/dashboard/questiontemplate/viewtemplate/${template.template_id}`}
-                >
+                <Link href={`/dashboard/questiontemplate/viewtemplate?template_id=${template.template_id}`}>
                   <FaEye className={styles.icon} />
                 </Link>
               </td>
@@ -115,17 +116,17 @@ const TemplateDashboard: React.FC = () => {
           ))}
         </tbody>
       </table>
-      {/* <div className={styles.pagination}>
-        {[...Array(Math.ceil(filteredTemplates.length / itemsPerPage)).keys()].map((number) => (
+      <div className={styles.pagination}>
+        {Array.from({ length: Math.ceil(filteredTemplates.length / itemsPerPage) }, (_, index) => (
           <button
-            key={number + 1}
-            onClick={() => paginate(number + 1)}
+            key={index + 1}
+            onClick={() => paginate(index + 1)}
             className={styles.pageButton}
           >
-            {number + 1}
+            {index + 1}
           </button>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

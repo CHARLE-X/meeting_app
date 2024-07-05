@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className={styles.container}>
           <aside className={styles.sidebar}>
             <Link href="/dashboard" legacyBehavior>
-              <a className={isActive('/dashboard') || isActive('/dashboard/newmeeting') || isActive('/dashboard/meetingdetails') || isActive('/dashboard/answers') ? styles.active : ''}>
+              <a className={isActive('/dashboard') || isActive('/dashboard/newmeeting') || isActive('/dashboard/meetingdetails') || isActive('/dashboard/answers') || isActive('/dashboard/viewmeetings')? styles.active : ''}>
                 <FiAirplay className={styles.icon} />
                 Meetings
               </a>

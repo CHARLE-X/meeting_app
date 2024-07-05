@@ -7,12 +7,13 @@ import { FaSearch, FaCalendarAlt, FaEye } from 'react-icons/fa';
 import { ImSpinner2 } from 'react-icons/im';
 import useLogout from '@/app/dashboard/logout/page';
 import { useUser } from '@/app/context/UserContext';
+import { API_ENDPOINTS } from '@/constant/static';
 
 interface Meeting {
   id: number;
   name: string;
-  date: string;
-  templates: string[];
+  created_at: string;
+  template_name: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -26,6 +27,7 @@ const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const logout = useLogout();
+  
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -35,7 +37,13 @@ const Dashboard: React.FC = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`https://d35d-197-211-53-14.ngrok-free.app/meetings/user/${user.id}`);
+        const response = await fetch(`${API_ENDPOINTS.GET_MEETING}${user.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
+          },
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch meetings');
         }
@@ -58,7 +66,7 @@ const Dashboard: React.FC = () => {
     const filtered = meetings.filter(
       (meeting) =>
         meeting.name.toLowerCase().includes(lowerQuery) ||
-        meeting.templates.some((template: string) => template.toLowerCase().includes(lowerQuery))
+        meeting.template_name.toLowerCase().includes(lowerQuery)
     );
     setFilteredMeetings(filtered);
     setCurrentPage(1); // Reset to first page on search
@@ -66,7 +74,7 @@ const Dashboard: React.FC = () => {
 
   const handleDateFilter = () => {
     const filtered = meetings.filter((meeting) => {
-      const meetingDate = new Date(meeting.date);
+      const meetingDate = new Date(meeting.created_at);
       const start = new Date(startDate);
       const end = new Date(endDate);
 
@@ -122,7 +130,7 @@ const Dashboard: React.FC = () => {
         </div>
       ) : currentItems.length === 0 ? (
         <div className={styles.noData}>
-          <p>Error 404: No meetings found. Click on "New Meeting" to create a new meeting.</p>
+          <p>No meetings found. Click on "New Meeting" to create a new meeting.</p>
         </div>
       ) : (
         <>
@@ -131,7 +139,7 @@ const Dashboard: React.FC = () => {
               <tr>
                 <th>Meeting Name</th>
                 <th>Date</th>
-                <th>Templates</th>
+                <th>Template</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -139,10 +147,10 @@ const Dashboard: React.FC = () => {
               {currentItems.map((meeting) => (
                 <tr key={meeting.id}>
                   <td>{meeting.name}</td>
-                  <td>{meeting.date}</td>
-                  <td>{meeting.templates.join(', ')}</td>
+                  <td>{meeting.created_at}</td>
+                  <td>{meeting.template_name}</td>
                   <td>
-                    <Link href={`/dashboard/meetingdetails?title=${encodeURIComponent(meeting.name)}&template=${encodeURIComponent(meeting.templates[0])}&fileName=${encodeURIComponent('')}`}>
+                    <Link href={`/dashboard/viewmeetings?meeting_id=${meeting.id}&title=${encodeURIComponent(meeting.name)}&template=${encodeURIComponent(meeting.template_name)}&fileName=${encodeURIComponent('')}`}>
                       <button className={styles.viewButton}>
                         <FaEye />
                       </button>

@@ -1,10 +1,11 @@
-'use client';
+"use client";
 // pages/dashboard/createtemplate.tsx
 
 import React, { useState } from 'react';
 import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import styles from '@/app/styles/newtemplate.module.css';
 import { useUser } from '@/app/context/UserContext';
+import { API_ENDPOINTS } from '@/constant/static';
 
 const CreateNewTemplate: React.FC = () => {
   const [templateName, setTemplateName] = useState('');
@@ -30,37 +31,37 @@ const CreateNewTemplate: React.FC = () => {
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
-  
+
     // Ensure user is not null before accessing user.id
     if (!user || !user.id) {
       setError('User not authenticated'); // Handle scenario where user is null
       return;
     }
-  
+
     const templateData = {
       user_id: user.id, // Ensure user.id is provided
       template_name: templateName,
       questions: questions.map(question => ({ question_text: question })),
     };
-  
+
     try {
-      const response = await fetch('https://d35d-197-211-53-14.ngrok-free.app/template/create-template', {
+      const response = await fetch(API_ENDPOINTS.NEW_TEMPLATE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(templateData),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(JSON.stringify(errorData));
       }
-  
+
       const data = await response.json();
-      setSuccess('<p className"succ">Template saved successfully!</p>');
+      setSuccess('Template saved successfully!');
       setError(null);
-  
+
       // Clear the form
       setTemplateName('');
       setQuestions(['', '', '']);

@@ -1,8 +1,8 @@
-// pages/dashboard/answers.tsx
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/Answers.module.css';
+import { API_ENDPOINTS } from '@/constant/static';
 
 interface QuestionAnswer {
   meeting_id: number;
@@ -20,13 +20,21 @@ const Answers: React.FC = () => {
 
   useEffect(() => {
     const fetchAnswers = async () => {
+      if (!meetingId) {
+        setError('Invalid meeting ID');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`https://d35d-197-211-53-14.ngrok-free.app/meeting/generate-answers/${meetingId}`, {
+        const response = await fetch(`${API_ENDPOINTS.GENERATE_ANSWERS}/${meetingId}`, {
           method: 'POST',
           headers: {
-            'Accept': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'ngrok-skip-browser-warning': '69420' // Bypass ngrok warning
           },
-          body: ''
+          body: JSON.stringify({ meeting_id: meetingId })
         });
 
         if (!response.ok) {
@@ -46,9 +54,7 @@ const Answers: React.FC = () => {
       }
     };
 
-    if (meetingId) {
-      fetchAnswers();
-    }
+    fetchAnswers();
   }, [meetingId]);
 
   if (loading) {

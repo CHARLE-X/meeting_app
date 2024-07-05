@@ -69,4 +69,10 @@
   .saveButton:hover {
     background-color: #F3A746;
   }
-  
+  .success {
+    color: green;
+    font-weight: bold;
+  }
+  .error{
+    color: #cc0000;
+  }

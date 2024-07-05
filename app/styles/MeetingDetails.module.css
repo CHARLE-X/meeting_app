@@ -95,7 +95,8 @@
   margin-bottom: 50px;
 }
 .download{
-  color:black
+  color:black;
+  cursor: pointer;
 }
 .generateButton{
   display:inline-flex;

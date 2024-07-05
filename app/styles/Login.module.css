@@ -132,3 +132,9 @@
   color:black;
   margin-right: 130px;
 }
+.error{
+  color:red
+}
+.success{
+  color:green
+}
