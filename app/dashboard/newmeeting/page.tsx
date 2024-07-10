@@ -45,14 +45,12 @@ const NewMeeting: React.FC = () => {
         setUploading(true);
         setShowReminder(false);
 
-        // Upload the file to the temporary endpoint
         const formData = new FormData();
         formData.append('file', file);
 
         const xhr = new XMLHttpRequest();
         xhr.open('POST', API_ENDPOINTS.TEMP_UPLOAD_AUDIO, true);
         
-
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
             const percentComplete = (e.loaded / e.total) * 100;
@@ -93,7 +91,7 @@ const NewMeeting: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${API_ENDPOINTS.DELETE_TEMP_AUDIO}?temp_audio_path=${encodeURIComponent(recordingFilePath)}`, {
+      const response = await fetch(`${API_ENDPOINTS.DELETE_TEMP_AUDIO}=${encodeURIComponent(recordingFilePath)}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +132,7 @@ const NewMeeting: React.FC = () => {
       temp_audio_path: recordingFilePath,
     };
 
-    console.log('Request Body:', JSON.stringify(requestBody));
+    console.log('Request Body:', requestBody);
 
     try {
       const response = await fetch(API_ENDPOINTS.FINAL_UPLOAD_AUDIO, {
@@ -155,14 +153,12 @@ const NewMeeting: React.FC = () => {
       const data = await response.json();
       setMeetingID(data.meeting.meeting_id);
       alert('Meeting created successfully!');
-      router.push(`/dashboard/meetingdetails?meeting_id=${data.meeting.meeting_id}`);
+      router.push(`/dashboard/meetingdetails?user_id=${user.id}&meeting_id=${data.meeting.meeting_id}`);
     } catch (error) {
       console.error('Error creating meeting:', error);
       alert('Error creating meeting');
     }
-};
-
-
+  };
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -236,7 +232,7 @@ const NewMeeting: React.FC = () => {
             accept="audio/*"
             onChange={handleFileChange}
             className={styles.fileInput}
-            required
+            required={!selectedFile}
           />
         </label>
         {selectedFile && (
@@ -258,6 +254,7 @@ const NewMeeting: React.FC = () => {
           <p>{uploadProgress.toFixed(2)}%</p>
         </div>
       )}
+      
       <button type="submit" className={styles.saveButton}>
         Save
       </button>

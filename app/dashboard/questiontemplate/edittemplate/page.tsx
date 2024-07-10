@@ -75,14 +75,19 @@ const EditTemplate: React.FC = () => {
   };
 
   const handleAddQuestion = async () => {
+    if (!templateId || !templateName) {
+      alert('Template ID and name are required to add a question.');
+      return;
+    }
+
     try {
-      const response = await fetch(`${API_ENDPOINTS.ADD_QUESTION}/${templateId}`, {
+      const response = await fetch(`${API_ENDPOINTS.ADD_QUESTION}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'ngrok-skip-browser-warning': '69420',
         },
-        body: JSON.stringify({ question_text: '' }),
+        body: JSON.stringify({ template_id: templateId, question_text: '' }),
       });
 
       if (!response.ok) {
@@ -100,27 +105,33 @@ const EditTemplate: React.FC = () => {
 
   const handleDeleteQuestion = async (index: number) => {
     const questionId = questions[index].id;
-    try {
-      const response = await fetch(`${API_ENDPOINTS.DELETE_QUESTION}/${templateId}/${questionId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420',
-        },
-      });
+    console.log(questionId)
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to delete question:', errorText);
-        throw new Error(`Failed to delete question: ${response.status} ${response.statusText}`);
+    if (questionId) {                                                 
+      try {
+        const response = await fetch(`${API_ENDPOINTS.DELETE_QUESTION}/template/delete-question/${templateId}/${questionId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': '69420',
+          },
+          body: JSON.stringify({ template_id: templateId, question_id: questionId }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Failed to delete question:', errorText);
+          throw new Error(`Failed to delete question: ${response.status} ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('Error deleting question:', error);
       }
-
-      const newQuestions = questions.filter((_, i) => i !== index);
-      setQuestions(newQuestions);
-    } catch (error) {
-      console.error('Error deleting question:', error);
     }
+
+    const newQuestions = questions.filter((_, i) => i !== index);
+    setQuestions(newQuestions);
   };
+
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -128,13 +139,15 @@ const EditTemplate: React.FC = () => {
     const requestBody = {
       id: Number(templateId),
       template_name: templateName,
-      questions: questions.map((q) => ({ id: q.id, question_text: q.question_text })),
+      add_questions: [],
+      update_questions: questions.map((q) => ({ id: q.id, question_text: q.question_text })),
+      delete_question_ids: [],
     };
 
     console.log('Request body:', requestBody); // Log the request body for debugging
 
     try {
-      const response = await fetch(`${API_ENDPOINTS.UPDATE_TEMPLATE}`, {
+      const response = await fetch(`${API_ENDPOINTS.UPDATE_TEMPLATE}/${templateId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,11 +1,10 @@
 'use client';
-// pages/dashboard/edittemplate.tsx
+// pages/dashboard/viewtemplate.tsx
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import styles from '@/app/styles/edittemplate.module.css';
-import { FaTrashAlt } from 'react-icons/fa';
-import { FiPlus } from 'react-icons/fi';
+import styles from '@/app/styles/viewtemplate.module.css';
+import { FaSearch } from 'react-icons/fa';
 import { useUser } from '@/app/context/UserContext';
 import { API_ENDPOINTS } from '@/constant/static';
 
@@ -19,14 +18,14 @@ interface TemplateData {
   questions: Question[];
 }
 
-const EditTemplate: React.FC = () => {
+const ViewTemplate: React.FC = () => {
   const router = useRouter();
   const { user } = useUser();
   const searchParams = useSearchParams();
   const templateId = searchParams.get('template_id');
 
-  const [templateName, setTemplateName] = useState('');
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [templateData, setTemplateData] = useState<TemplateData | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,8 +53,10 @@ const EditTemplate: React.FC = () => {
         }
 
         const data = await response.json();
-        setTemplateName(data.template_name);
-        setQuestions(data.questions);
+        setTemplateData({
+          template_name: data.template_name,
+          questions: data.questions,
+        });
       } catch (error) {
         console.error('Error fetching template data:', error);
         setError('Failed to fetch template data');
@@ -67,91 +68,13 @@ const EditTemplate: React.FC = () => {
     fetchTemplateData();
   }, [user, templateId]);
 
-  const handleQuestionChange = (index: number, value: string) => {
-    const newQuestions = [...questions];
-    newQuestions[index] = { ...newQuestions[index], question_text: value };
-    setQuestions(newQuestions);
-  };
-
-  const handleAddQuestion = async () => {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.ADD_QUESTION}/${templateId}?template_name=${templateName}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420',
-        },
-        body: JSON.stringify({ question_text: '' }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to add question:', errorText);
-        throw new Error(`Failed to add question: ${response.status} ${response.statusText}`);
-      }
-
-      const newQuestion = await response.json();
-      setQuestions([...questions, newQuestion]);
-    } catch (error) {
-      console.error('Error adding question:', error);
+  const filteredQuestions = templateData?.questions.filter((question) => {
+    if (typeof question.question_text !== 'string') {
+      console.error('Question text is not a string:', question);
+      return false;
     }
-  };
-
-  const handleDeleteQuestion = async (questionId: number) => {
-    try {
-      const response = await fetch(`${API_ENDPOINTS.DELETE_QUESTION}/${questionId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420',
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to delete question:', errorText);
-        throw new Error(`Failed to delete question: ${response.status} ${response.statusText}`);
-      }
-
-      const newQuestions = questions.filter((question) => question.id !== questionId);
-      setQuestions(newQuestions);
-    } catch (error) {
-      console.error('Error deleting question:', error);
-    }
-  };
-
-  const handleSave = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const requestBody = {
-      template_name: templateName,
-      questions: questions.map((q) => ({ id: q.id, question_text: q.question_text })),
-    };
-
-    console.log('Request body:', requestBody); // Log the request body for debugging
-
-    try {
-      const response = await fetch(API_ENDPOINTS.UPDATE_TEMPLATE, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': '69420',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to update template:', errorText);
-        throw new Error(`Failed to update template: ${response.status} ${response.statusText}`);
-      }
-
-      alert('Template updated successfully!');
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('Error updating template:', error);
-    }
-  };
+    return question.question_text.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (loading) {
     return <p>Loading...</p>;
@@ -161,51 +84,31 @@ const EditTemplate: React.FC = () => {
     return <p>Error: {error}</p>;
   }
 
+  if (!templateData) {
+    return <p>No template data found</p>;
+  }
+
   return (
-    <form onSubmit={handleSave} className={styles.container}>
-      <h1 className={styles.heading}>Edit Template</h1>
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Template Name</label>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>{templateData.template_name}</h1>
+      <div className={styles.searchBar}>
         <input
           type="text"
-          value={templateName}
-          onChange={(e) => setTemplateName(e.target.value)}
-          className={styles.input}
-          required
+          placeholder="Search questions"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={styles.searchInput}
         />
+        <FaSearch className={styles.searchIcon} />
       </div>
-      <div className={styles.formGroup}>
-        <div className={styles.questionsHeader}>
-          <label className={styles.label}>Questions</label>
-          <button
-            type="button"
-            className={styles.addButton}
-            onClick={handleAddQuestion}
-          >
-            Add Question <FiPlus className={styles.addIcon} />
-          </button>
+      {filteredQuestions?.map((question, index) => (
+        <div key={index} className={styles.question}>
+          <h2 className={styles.subheading}>{`Question ${index + 1}`}</h2>
+          <p>{question.question_text}</p>
         </div>
-        {questions.map((question, index) => (
-          <div key={question.id} className={styles.questionRow}>
-            <input
-              type="text"
-              value={question.question_text}
-              onChange={(e) => handleQuestionChange(index, e.target.value)}
-              className={styles.input}
-              required
-            />
-            <FaTrashAlt
-              className={styles.deleteIcon}
-              onClick={() => handleDeleteQuestion(question.id)}
-            />
-          </div>
-        ))}
-      </div>
-      <button type="submit" className={styles.saveButton}>
-        Save
-      </button>
-    </form>
+      ))}
+    </div>
   );
 };
 
-export default EditTemplate;
+export default ViewTemplate;

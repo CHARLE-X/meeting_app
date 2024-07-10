@@ -27,7 +27,6 @@ const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const logout = useLogout();
-  
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -48,8 +47,14 @@ const Dashboard: React.FC = () => {
           throw new Error('Failed to fetch meetings');
         }
         const data = await response.json();
-        setMeetings(data.meetings);
-        setFilteredMeetings(data.meetings);
+
+        // Sort meetings by created_at in descending order
+        const sortedMeetings = data.meetings.sort((a: Meeting, b: Meeting) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+
+        setMeetings(sortedMeetings);
+        setFilteredMeetings(sortedMeetings);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching meetings:', error);
@@ -147,14 +152,16 @@ const Dashboard: React.FC = () => {
               {currentItems.map((meeting) => (
                 <tr key={meeting.id}>
                   <td>{meeting.name}</td>
-                  <td>{meeting.created_at}</td>
+                  <td>{new Date(meeting.created_at).toLocaleDateString()}</td>
                   <td>{meeting.template_name}</td>
                   <td>
-                    <Link href={`/dashboard/viewmeetings?meeting_id=${meeting.id}&title=${encodeURIComponent(meeting.name)}&template=${encodeURIComponent(meeting.template_name)}&fileName=${encodeURIComponent('')}`}>
-                      <button className={styles.viewButton}>
-                        <FaEye />
-                      </button>
-                    </Link>
+                    {user && user.id && (
+                      <Link href={`/dashboard/viewmeetings?user_id=${user.id}&meeting_id=${meeting.id}`}>
+                        <button className={styles.viewButton}>
+                          <FaEye />
+                        </button>
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}

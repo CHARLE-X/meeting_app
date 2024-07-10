@@ -15,7 +15,9 @@ export const API_ENDPOINTS = {
   NEW_TEMPLATE:`${BASE_URL}/template/create-template`,
   GET_VIEWTEMPLATE: 'https://3992-197-211-63-124.ngrok-free.app/template/user',
   ADD_QUESTION: 'https://3992-197-211-63-124.ngrok-free.app/template/add-question',
-  DELETE_QUESTION: 'https://3992-197-211-63-124.ngrok-free.app/template/delete-question',
-  UPDATE_TEMPLATE: 'https://3992-197-211-63-124.ngrok-free.app/template/update-template',
-  MEETING_DETAILS: (userId: number, meetingId: number) => `https://3992-197-211-63-124.ngrok-free.app/meeting/${userId}?meeting_id=${meetingId}`,
+  DELETE_QUESTION: 'https://3992-197-211-63-124.ngrok-free.app',
+  UPDATE_TEMPLATE: 'https://3992-197-211-63-124.ngrok-free.app/template',
+  EDIT_MEETING:'https://3992-197-211-63-124.ngrok-free.app/meeting/edit-meeting', // Add this line,
+  VIEW_MEETING:'https://3992-197-211-63-124.ngrok-free.app/meeting'
+  // MEETING_DETAILS: (userId: number, meetingId: number) => `https://3992-197-211-63-124.ngrok-free.app/meeting/${userId}?meeting_id=${meetingId}`,
 };

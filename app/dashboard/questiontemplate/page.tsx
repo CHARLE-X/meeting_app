@@ -49,7 +49,9 @@ const TemplateDashboard: React.FC = () => {
 
       const data = await response.json();
       console.log("Fetched templates:", data);
-      setTemplates(Array.isArray(data) ? data : [data]);
+      // Sort templates by template_id in descending order
+      const sortedTemplates = Array.isArray(data) ? data.sort((a: Template, b: Template) => b.template_id - a.template_id) : [data];
+      setTemplates(sortedTemplates);
     } catch (error) {
       console.error("Error fetching templates:", error);
     }
