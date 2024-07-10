@@ -419,6 +419,7 @@
 // };
 
 // export default MeetingDetails;
+'use client';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FaMicrophone } from 'react-icons/fa';
@@ -512,7 +513,7 @@ const MeetingDetails: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ meeting_id: meetingId }), // Send meetingId in the request body
+        body: JSON.stringify({ meeting_id: meetingId }),
       });
 
       if (!response.ok) {
@@ -603,10 +604,7 @@ const MeetingDetails: React.FC = () => {
         <div className={styles.progressSection}>
           <p className={styles.trans}>Transcribing...</p>
           <div className={styles.progressBar}>
-            <div
-              className={styles.progress}
-              style={{ width: `${transcriptionProgress}%` }}
-            ></div>
+            <div className={styles.progress} style={{ width: `${transcriptionProgress}%` }}></div>
           </div>
           <p>{transcriptionProgress}%</p>
         </div>
