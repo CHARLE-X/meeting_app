@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import styles from '@/app/styles/Answers.module.css';
+import styles from '@/app/styles/answers.module.css';
 import { API_ENDPOINTS } from '@/constant/static';
 
 interface QuestionAnswer {

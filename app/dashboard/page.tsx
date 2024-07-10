@@ -135,7 +135,7 @@ const Dashboard: React.FC = () => {
         </div>
       ) : currentItems.length === 0 ? (
         <div className={styles.noData}>
-          <p>No meetings found. Click on "New Meeting" to create a new meeting.</p>
+          <p>No meetings found. Click on &quot;New Meeting&quot; to create a new meeting.</p>
         </div>
       ) : (
         <>
