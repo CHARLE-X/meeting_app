@@ -428,6 +428,7 @@ import styles from '@/app/styles/MeetingDetails.module.css';
 import { API_ENDPOINTS } from '@/constant/static';
 import Link from 'next/link';
 import { FiDownloadCloud } from 'react-icons/fi';
+import SuspenseBoundaryWrapper from '@/app/dashboard/component/page'; // Adjust the import path accordingly
 
 interface Question {
   id: number;
@@ -624,4 +625,12 @@ const MeetingDetails: React.FC = () => {
   );
 };
 
-export default MeetingDetails;
+const MeetingDetailsPage: React.FC = () => {
+  return (
+    <SuspenseBoundaryWrapper>
+      <MeetingDetails />
+    </SuspenseBoundaryWrapper>
+  );
+};
+
+export default MeetingDetailsPage;

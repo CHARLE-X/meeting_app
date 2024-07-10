@@ -1,12 +1,11 @@
 import React, { Suspense } from 'react';
-import MeetingDetails from '@/app/dashboard/viewmeetings/page';
 
-const Page: React.FC = () => {
+const SuspenseBoundaryWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <MeetingDetails />
+      {children}
     </Suspense>
   );
 };
 
-export default Page;
+export default SuspenseBoundaryWrapper;
