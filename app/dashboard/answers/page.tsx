@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/answers.module.css';
 import { API_ENDPOINTS } from '@/constant/static';
@@ -11,7 +11,7 @@ interface QuestionAnswer {
   answer_text: string;
 }
 
-const Answers: React.FC = () => {
+const AnswersComponent: React.FC = () => {
   const searchParams = useSearchParams();
   const meetingId = searchParams.get('meetingId');
   const [qaData, setQaData] = useState<QuestionAnswer[]>([]);
@@ -89,6 +89,14 @@ const Answers: React.FC = () => {
         ))
       )}
     </div>
+  );
+};
+
+const Answers: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AnswersComponent />
+    </Suspense>
   );
 };
 

@@ -1,7 +1,7 @@
 'use client';
 // pages/dashboard/edittemplate.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/edittemplate.module.css';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -105,9 +105,9 @@ const EditTemplate: React.FC = () => {
 
   const handleDeleteQuestion = async (index: number) => {
     const questionId = questions[index].id;
-    console.log(questionId)
+    console.log(questionId);
 
-    if (questionId) {                                                 
+    if (questionId) {
       try {
         const response = await fetch(`${API_ENDPOINTS.DELETE_QUESTION}/template/delete-question/${templateId}/${questionId}`, {
           method: 'DELETE',
@@ -131,7 +131,6 @@ const EditTemplate: React.FC = () => {
     const newQuestions = questions.filter((_, i) => i !== index);
     setQuestions(newQuestions);
   };
-
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -223,4 +222,10 @@ const EditTemplate: React.FC = () => {
   );
 };
 
-export default EditTemplate;
+const EditTemplateWithSuspense: React.FC = () => (
+  <Suspense fallback={<p>Loading...</p>}>
+    <EditTemplate />
+  </Suspense>
+);
+
+export default EditTemplateWithSuspense;

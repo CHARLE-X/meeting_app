@@ -1,7 +1,7 @@
 'use client';
 // pages/dashboard/viewtemplate.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from '@/app/styles/viewtemplate.module.css';
 import { FaSearch } from 'react-icons/fa';
@@ -18,7 +18,7 @@ interface TemplateData {
   questions: Question[];
 }
 
-const ViewTemplate: React.FC = () => {
+const ViewTemplateContent: React.FC = () => {
   const router = useRouter();
   const { user } = useUser();
   const searchParams = useSearchParams();
@@ -108,6 +108,14 @@ const ViewTemplate: React.FC = () => {
         </div>
       ))}
     </div>
+  );
+};
+
+const ViewTemplate: React.FC = () => {
+  return (
+    <Suspense fallback={<p>Loading template...</p>}>
+      <ViewTemplateContent />
+    </Suspense>
   );
 };
 
