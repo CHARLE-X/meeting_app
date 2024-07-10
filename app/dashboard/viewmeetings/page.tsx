@@ -245,7 +245,7 @@ const MeetingDetails: React.FC = () => {
       const fetchMeetingDetails = async () => {
         try {
           console.log(`Fetching meeting details for user ID: ${userId} and meeting ID: ${meetingId}`);
-          const response = await fetch(`https://3992-197-211-63-124.ngrok-free.app/meeting/${userId}?meeting_id=${meetingId}`, {
+          const response = await fetch(`${API_ENDPOINTS.GET_MEETING}/${userId}?meeting_id=${meetingId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -271,7 +271,8 @@ const MeetingDetails: React.FC = () => {
     } else {
       console.log('Invalid user ID or meeting ID');
     }
-  }, [userId, meetingId]);
+  }, [userId, meetingId, userIdParam, meetingIdParam]);
+
   const handleTranscribe = async () => {
     if (!meetingId) {
       console.error('Meeting ID not found.');
@@ -349,7 +350,6 @@ const MeetingDetails: React.FC = () => {
       console.error('Error downloading transcription text:', error);
     }
   };
-
 
   if (!meeting) {
     return <div>Loading...</div>;

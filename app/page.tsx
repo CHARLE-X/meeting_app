@@ -30,7 +30,7 @@ const Login: React.FC = () => {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Login failed');
       }
-      console.log(response) 
+      
       const data = await response.json();
       console.log('Response Data:', data);
 
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
           <button type="submit" className={styles.loginButton}>
             Log In
           </button>
-          <p className={styles.text}>Don't have an account?</p>
+          <p className={styles.text}>Don&apos;t have an account?</p>
           <Link href="/register" legacyBehavior>
             <a className={styles.signButton}>Sign Up</a>
           </Link>

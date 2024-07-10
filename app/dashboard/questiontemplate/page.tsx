@@ -60,7 +60,8 @@ const TemplateDashboard: React.FC = () => {
   useEffect(() => {
     console.log("User object:", user);
     fetchTemplates();
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredTemplates = templates.filter((template) =>
     template.template_name.toLowerCase().includes(searchTerm.toLowerCase())
