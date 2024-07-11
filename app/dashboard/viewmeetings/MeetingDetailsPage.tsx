@@ -1,5 +1,5 @@
 import React from 'react';
-import SuspenseBoundaryWrapper from '@/app/dashboard/component/SuspenseBoundaryWrapper.tsx';
+import SuspenseBoundaryWrapper from '@/app/dashboard/component/SuspenseBoundaryWrapper';
 import MeetingDetails from '@/app/dashboard/viewmeetings/page';
 
 const MeetingDetailsPage: React.FC = () => {
