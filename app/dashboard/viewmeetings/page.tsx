@@ -429,6 +429,7 @@ import { API_ENDPOINTS } from '@/constant/static';
 import Link from 'next/link';
 import { FiDownloadCloud } from 'react-icons/fi';
 import SuspenseBoundaryWrapper from '@/app/dashboard/component/page'; // Adjust the import path accordingly
+import MeetingDetailsPage from '@/app/dashboard/viewmeetings/meetingdetailspage';
 
 interface Question {
   id: number;
@@ -625,12 +626,9 @@ const MeetingDetails: React.FC = () => {
   );
 };
 
-const MeetingDetailsPage: React.FC = () => {
-  return (
-    <SuspenseBoundaryWrapper>
-      <MeetingDetails />
-    </SuspenseBoundaryWrapper>
-  );
+const Page: React.FC = () => {
+  return <MeetingDetailsPage />;
 };
+
 
 export default MeetingDetailsPage;
