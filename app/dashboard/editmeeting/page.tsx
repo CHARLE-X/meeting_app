@@ -31,7 +31,7 @@ const EditMeeting = () => {
       if (userId && meetingId) {
         try {
           console.log(`Fetching meeting details for user ID: ${userId} and meeting ID: ${meetingId}`);
-          const response = await fetch(`https://6195-102-89-22-54.ngrok-free.app/meeting/${userId}?meeting_id=${meetingId}`, {
+          const response = await fetch(`https://d23e-2c0f-2a80-63-9a10-e8c1-bb27-6201-ff6e.ngrok-free.app/meeting/${userId}?meeting_id=${meetingId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const EditMeeting = () => {
       }
 
       try {
-        const response = await fetch(`https://6195-102-89-22-54.ngrok-free.app/template/get-template?user_id=${userId}`, {
+        const response = await fetch(`https://d23e-2c0f-2a80-63-9a10-e8c1-bb27-6201-ff6e.ngrok-free.app/template/get-template?user_id=${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ const EditMeeting = () => {
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await fetch(`https://6195-102-89-22-54.ngrok-free.app/meeting/edit-meeting/${meetingId}?name=${meetingName}&template_name=${selectedTemplate}`, {
+      const response = await fetch(`https://d23e-2c0f-2a80-63-9a10-e8c1-bb27-6201-ff6e.ngrok-free.app/meeting/edit-meeting/${meetingId}?name=${meetingName}&template_name=${selectedTemplate}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
