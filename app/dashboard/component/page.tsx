@@ -1,6 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, ReactNode } from 'react';
 
-const SuspenseBoundaryWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface SuspenseBoundaryWrapperProps {
+  children: ReactNode;
+}
+
+const SuspenseBoundaryWrapper: React.FC<SuspenseBoundaryWrapperProps> = ({ children }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {children}
