@@ -85,6 +85,7 @@
 // };
 
 // export default Login;
+'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@/app/context/UserContext';
