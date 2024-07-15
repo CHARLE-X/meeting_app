@@ -111,7 +111,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router'; // Correct import for Next.js router
 import Link from 'next/link';
-import styles from '@/app/styles/Register.module.css'; // Adjusted CSS import path
+import styles from '@/app/styles/Login.module.css';
 import { API_ENDPOINTS } from '@/constant/static';
 
 const Register: React.FC = () => {
