@@ -13,7 +13,7 @@
 // export default MeetingDetailsPage;
 import React from 'react';
 import SuspenseBoundaryWrapper from '@/app/dashboard/component/SuspenseBoundaryWrapper';
-import MeetingDetails from '@/app/dashboard/viewmeetings/MeetingDetails';
+import MeetingDetails from '@/app/dashboard/viewmeetings/page';
 
 const MeetingDetailsPage: React.FC = () => {
   return (
