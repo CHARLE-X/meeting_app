@@ -1,6 +1,6 @@
 import React from 'react';
-import SuspenseBoundaryWrapper from '@/app/dashboard/component/SuspenseBoundaryWrapper';
-import MeetingDetails from '@/app/dashboard/viewmeetings/page';
+import SuspenseBoundaryWrapper from '@/app/dashboard/components/SuspenseBoundaryWrapper';
+import MeetingDetails from '@/app/dashboard/meetingdetails/page';
 
 const MeetingDetailsPage: React.FC = () => {
   return (
