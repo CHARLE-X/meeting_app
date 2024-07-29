@@ -441,7 +441,7 @@
 // export default MeetingDetailsComponent;
 
 import React from 'react';
-import MeetingDetailsPage from '@/app/dashboard/viewmeetings/MeetingDetailsPage';
+import MeetingDetailsPage from '@/app/dashboard/meetingdetails/MeetingDetailsPage';
 
 const Page: React.FC = () => {
   return <MeetingDetailsPage />;
